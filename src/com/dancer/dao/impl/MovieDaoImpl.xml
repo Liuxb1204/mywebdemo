@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dancer.dao.MovieDao">
+	<!-- 所有查询-->	
+		<select id="selectAll" resultType="com.dancer.entity.Movie">
+			<![CDATA[
+				select id,moviename,xiazai,img,category
+				from movie
+			]]>
+		</select>
+	<!-- 根据标签查询-->	
+		<select id="selectcategory" parameterType="java.lang.String" resultType="com.dancer.entity.Movie">
+				select id,moviename,xiazai,img,category
+				from movie
+				where category=#{category}
+		</select>
+		<!-- 根据名字查询-->	
+		<select id="selectByName" parameterType="java.lang.String" resultType="com.dancer.entity.Movie">
+				select id,moviename,xiazai,img,category
+				from movie
+				where img=#{img}
+		</select>
+		<!-- 根据id查询-->	
+		<select id="selectById" parameterType="java.lang.Integer" resultType="com.dancer.entity.Movie">
+				select id,moviename,xiazai,img,category
+				from movie
+				where id=#{id}
+		</select>
+
+	<!-- 添加电影 -->
+	<insert id="insertMovie" parameterType="com.dancer.entity.Movie">
+		<selectKey keyProperty="id" resultType="java.lang.Integer" order="BEFORE">
+				select music_xl.nextval from dual
+			</selectKey>
+				insert into movie values(#{id},#{moviename,jdbcType=VARCHAR},#{xiazai,jdbcType=VARCHAR},#{img,jdbcType=VARCHAR},#{category,jdbcType=VARCHAR})
+	</insert>
+	<!--批量删除 -->
+	<delete id="deleteMovie">
+		delete from movie where id in
+		<foreach collection="ids" item="id" open="(" separator="," close=")">
+		#{id}
+		</foreach>
+	</delete>
+</mapper>

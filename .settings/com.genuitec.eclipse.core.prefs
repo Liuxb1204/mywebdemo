@@ -1,0 +1,4 @@
+#Wed Nov 23 16:07:30 CST 2016
+eclipse.preferences.version=1
+validator.Checked=WebRoot/js/jquery.min.js,WebRoot/js/c56.js,WebRoot/WEB-INF/js/jquery.min.js,WebRoot/WEB-INF/js/c56.js,WebRoot/js/common.js
+validator.Unchecked=

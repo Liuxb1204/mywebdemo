@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dancer.dao.MusicDao">
+	<!-- 所有查询-->	
+		<select id="selectAllFy" resultType="com.dancer.entity.Music">
+			<![CDATA[
+				select id,songname,jmname,singer,state,lyric,xiazai,category
+				from(select id,songname,jmname,singer,state,lyric,xiazai,category,rownum rn from music
+				where rownum<=#{rownum2})
+				where rn>=#{rownum}
+			]]>
+		</select>
+	<!-- 根据标签查询-->	
+		<select id="selectcategory" resultType="com.dancer.entity.Music">
+			<![CDATA[
+				select id,songname,jmname,singer,state,lyric,xiazai,category
+				from(select id,songname,jmname,singer,state,lyric,xiazai,category,rownum rn
+				from(select id,songname,jmname,singer,state,lyric,xiazai,category,rownum rn from music
+				where category=#{category})
+				where rownum<=#{rownum2})
+				where rn>=#{rownum}
+			]]>
+		</select>
+		<!-- 歌名模糊查询-->	
+		<select id="selectLikeName" resultType="com.dancer.entity.Music">
+			<![CDATA[
+				select id,songname,jmname,singer,state,lyric,xiazai,category
+				from(select id,songname,jmname,singer,state,lyric,xiazai,category,rownum rn
+				from(select id,songname,jmname,singer,state,lyric,xiazai,category,rownum rn from music
+				where songname like '%'|| #{songname} ||'%')
+				where rownum<=#{rownum2})
+				where rn>=#{rownum}
+				
+			]]>
+		</select> 
+		<!-- 歌名查询是否重复-->	
+		<select id="selectByName" resultType="com.dancer.entity.Music">
+				select id,songname,jmname,singer,state,lyric,xiazai,category
+				from music
+				where songname=#{songname}
+		</select> 
+	<!-- 查询歌曲数据量 -->
+  	<select id="selectCount" resultType="java.lang.Integer">
+  		select count(id) from music 
+	</select>
+	<!-- id查询 -->
+  	<select id="selectSong" resultType="com.dancer.entity.Music" parameterType="java.lang.Integer">
+  		select id,songname,jmname,singer,state,lyric,xiazai,category from music
+  		where id=#{id} 
+	</select>
+	<!-- 根据标签查询歌曲数据量 -->
+  	<select id="categorySelectCount" resultType="java.lang.Integer">
+  		select count(id) from music where category=#{category} 
+	</select>
+	<!-- 根据歌名查询歌曲数据量 -->
+  	<select id="selectcountName" resultType="java.lang.Integer">
+  		select count(id) from music where songname=#{songname} 
+	</select>
+	<!-- 添加歌曲 -->
+	<insert id="insertMusic" parameterType="com.dancer.entity.Music">
+		<selectKey keyProperty="id" resultType="java.lang.Integer" order="BEFORE">
+				select music_xl.nextval from dual
+			</selectKey>
+				insert into music values(#{id},#{songname,jdbcType=VARCHAR},#{jmname,jdbcType=VARCHAR},#{singer,jdbcType=VARCHAR},#{state,jdbcType=VARCHAR},#{lyric,jdbcType=VARCHAR},#{xiazai,jdbcType=VARCHAR},#{category,jdbcType=VARCHAR})
+	</insert>
+	<!--批量删除 -->
+	<delete id="deleteMusic">
+		delete from music where id in
+		<foreach collection="ids" item="id" open="(" separator="," close=")">
+		#{id}
+		</foreach>
+	</delete>
+</mapper>
